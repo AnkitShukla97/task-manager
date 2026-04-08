@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Task } from '@types'
+import type { Task } from '../types'
 
 // Persist tasks to localStorage
 export function useLocalStorage<T>(key: string, initialValue: T) {

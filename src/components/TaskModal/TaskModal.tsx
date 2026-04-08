@@ -1,6 +1,6 @@
 import React from "react";
 import { useTaskContext } from "../../context/TaskContext";
-import { Priority, Status } from "../../types";
+import type { Priority, Status } from "../../types";
 import { generateId } from "../../utils";
 
 interface Props {

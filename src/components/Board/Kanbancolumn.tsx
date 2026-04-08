@@ -1,5 +1,4 @@
-import React from "react";
-import { Status, Task } from "../../types";
+import type { Task, Status } from "../../types";
 import { STATUS_META } from "../../utils";
 import TaskCard from "../TaskCard/TaskCard";
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { TaskProvider } from "./context/TaskContext";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Topbar from "./components/Topbar/Topbar";

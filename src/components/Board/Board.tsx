@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useTaskContext } from "../../context/TaskContext";
-import KanbanColumn from "./KanbanColumn";
+import KanbanColumn from "./Kanbancolumn";
 import TaskModal from "../TaskModal/TaskModal";
-import { Status } from "../../types";
+import type { Status } from "../../types";
 
 const COLUMNS: Status[] = ["todo", "in-progress", "done"];
 

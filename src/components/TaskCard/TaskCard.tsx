@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Task, Status } from "../../types";
+import type { Task, Status } from "../../types";
 import { PRIORITY_STYLES, PRIORITY_LABEL, dueDateLabel } from "../../utils";
 import { useTaskContext } from "../../context/TaskContext";
 
