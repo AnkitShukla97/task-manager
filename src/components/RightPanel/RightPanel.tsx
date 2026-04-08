@@ -1,39 +1,25 @@
 import { useTaskContext } from "../../context/TaskContext";
 import { useDueSoon } from "../../hooks";
-import { dueDateLabel } from "../../utils";
-
-const ALL_TAGS = [
-  "Hooks",
-  "API",
-  "UI",
-  "Testing",
-  "CI/CD",
-  "Setup",
-  "Types",
-  "Config",
-  "Deploy",
-];
-
-const TAG_STYLES: Record<string, string> = {
-  Hooks: "bg-indigo-500/10 text-indigo-400",
-  API: "bg-indigo-500/10 text-indigo-400",
-  UI: "bg-amber-500/10 text-amber-400",
-  Testing: "bg-emerald-500/10 text-emerald-400",
-  "CI/CD": "bg-red-500/10 text-red-400",
-  default: "bg-indigo-500/10 text-indigo-400",
-};
+import { dueDateLabel, TAG_COLOR_STYLES } from "../../utils";
 
 export default function RightPanel() {
-  const { stats, tasks, setFilter } = useTaskContext();
+  const { stats, tasks, setFilter, filter } = useTaskContext();
   const dueSoon = useDueSoon(tasks);
   const pct = Math.round((stats.done / (stats.total || 1)) * 100);
 
-  function filterByTag(tag: string) {
+  // Get unique tags from all tasks
+  const allTags = Array.from(
+    new Map(
+      tasks.flatMap((task) => task.tags).map((tag) => [tag.name, tag]),
+    ).values(),
+  );
+
+  function filterByTag(tagName: string) {
     setFilter((f) => ({
       ...f,
-      tags: f.tags.includes(tag)
-        ? f.tags.filter((t) => t !== tag)
-        : [...f.tags, tag],
+      tags: f.tags.includes(tagName)
+        ? f.tags.filter((t) => t !== tagName)
+        : [...f.tags, tagName],
     }));
   }
 
@@ -156,23 +142,33 @@ export default function RightPanel() {
       )}
 
       {/* Tags filter */}
-      <section>
-        <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest mb-3">
-          Tags
-        </p>
-        <div className="flex flex-wrap gap-1.5">
-          {ALL_TAGS.map((tag) => (
-            <button
-              key={tag}
-              onClick={() => filterByTag(tag)}
-              className={`text-[11px] px-[7px] py-[3px] rounded-[6px] transition-colors cursor-pointer
-                ${TAG_STYLES[tag] ?? TAG_STYLES.default}`}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
-      </section>
+      {allTags.length > 0 && (
+        <section>
+          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-widest mb-3">
+            Tags
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {allTags.map((tag) => {
+              const style = TAG_COLOR_STYLES[tag.color];
+              const isActive = filter.tags.includes(tag.name);
+              return (
+                <button
+                  key={tag.name}
+                  onClick={() => filterByTag(tag.name)}
+                  className={`text-[11px] px-[7px] py-[3px] rounded-[6px] transition-all cursor-pointer font-medium border
+                    ${
+                      isActive
+                        ? `${style.bg} ${style.text} ${style.border}`
+                        : `${style.bg} ${style.text} opacity-60 hover:opacity-100`
+                    }`}
+                >
+                  {tag.name}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
     </aside>
   );
 }

@@ -28,7 +28,9 @@ export function TaskProvider({ children }: { children: ReactNode }) {
         return false;
       if (
         filter.tags.length > 0 &&
-        !filter.tags.some((tag) => t.tags.includes(tag))
+        !filter.tags.some((filterTag) =>
+          t.tags.some((taskTag) => taskTag.name === filterTag),
+        )
       )
         return false;
       if (

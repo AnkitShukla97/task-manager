@@ -1,7 +1,7 @@
 import React from "react";
 import { useTaskContext } from "../../context/TaskContext";
-import type { Priority, Status, Task } from "../../types";
-import { generateId } from "../../utils";
+import type { Priority, Status, Task, Tag, TagColor } from "../../types";
+import { generateId, TAG_COLORS, TAG_COLOR_STYLES } from "../../utils";
 
 interface Props {
   onClose: () => void;
@@ -14,7 +14,7 @@ interface FormValues {
   priority: Priority;
   status: Status;
   dueDate: string;
-  tags: string;
+  tags: Tag[];
 }
 
 // Simple validation without external lib (add zod + react-hook-form for production)
@@ -39,8 +39,11 @@ export default function TaskModal({ onClose, editingTask }: Props) {
     priority: editingTask?.priority || "medium",
     status: editingTask?.status || "todo",
     dueDate: editingTask?.dueDate || "",
-    tags: editingTask?.tags.join(", ") || "",
+    tags: editingTask?.tags || [],
   }));
+  const [tagInput, setTagInput] = React.useState("");
+  const [selectedTagColor, setSelectedTagColor] =
+    React.useState<TagColor>("indigo");
   const [errors, setErrors] = React.useState<
     Partial<Record<keyof FormValues, string>>
   >({});
@@ -49,6 +52,41 @@ export default function TaskModal({ onClose, editingTask }: Props) {
   function set(field: keyof FormValues, val: string) {
     setValues((v) => ({ ...v, [field]: val }));
     if (submitted) setErrors(validate({ ...values, [field]: val }));
+  }
+
+  function addTag() {
+    const trimmedInput = tagInput.trim();
+    if (!trimmedInput) return;
+
+    // Check if tag already exists
+    if (
+      values.tags.some(
+        (t) => t.name.toLowerCase() === trimmedInput.toLowerCase(),
+      )
+    ) {
+      setTagInput("");
+      return;
+    }
+
+    setValues((v) => ({
+      ...v,
+      tags: [...v.tags, { name: trimmedInput, color: selectedTagColor }],
+    }));
+    setTagInput("");
+  }
+
+  function removeTag(tagName: string) {
+    setValues((v) => ({
+      ...v,
+      tags: v.tags.filter((t) => t.name !== tagName),
+    }));
+  }
+
+  function handleTagInputKeyPress(e: React.KeyboardEvent) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addTag();
+    }
   }
 
   function handleSubmit() {
@@ -66,10 +104,7 @@ export default function TaskModal({ onClose, editingTask }: Props) {
           description: values.description.trim() || undefined,
           priority: values.priority,
           status: values.status,
-          tags: values.tags
-            .split(",")
-            .map((t) => t.trim())
-            .filter(Boolean),
+          tags: values.tags,
           dueDate: values.dueDate || undefined,
           updatedAt: new Date().toISOString(),
         },
@@ -83,10 +118,7 @@ export default function TaskModal({ onClose, editingTask }: Props) {
           description: values.description.trim() || undefined,
           priority: values.priority,
           status: values.status,
-          tags: values.tags
-            .split(",")
-            .map((t) => t.trim())
-            .filter(Boolean),
+          tags: values.tags,
           dueDate: values.dueDate || undefined,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
@@ -106,7 +138,7 @@ export default function TaskModal({ onClose, editingTask }: Props) {
       className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
       onClick={handleBackdrop}
     >
-      <div className="bg-[#16161F] border border-[#1E1E2E] rounded-2xl w-full max-w-md p-6 shadow-2xl">
+      <div className="bg-[#16161F] border border-[#1E1E2E] rounded-2xl w-full max-w-md p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-5">
           <h2 className="font-display text-[17px] font-bold text-zinc-100">
             {editingTask ? "Edit Task" : "New Task"}
@@ -208,18 +240,65 @@ export default function TaskModal({ onClose, editingTask }: Props) {
             )}
           </div>
 
-          {/* Tags */}
+          {/* Tags with colors */}
           <div>
-            <label className="text-[12px] font-medium text-zinc-400 block mb-1.5">
-              Tags <span className="text-zinc-600">(comma separated)</span>
+            <label className="text-[12px] font-medium text-zinc-400 block mb-2">
+              Tags
             </label>
-            <input
-              type="text"
-              placeholder="Hooks, API, UI"
-              value={values.tags}
-              onChange={(e) => set("tags", e.target.value)}
-              className="w-full bg-[#13131A] border border-[#1E1E2E] rounded-lg px-3 py-2 text-[13px] text-zinc-200 placeholder-zinc-600 outline-none focus:border-indigo-500/50 transition-colors"
-            />
+
+            {/* Tag input section */}
+            <div className="flex gap-2 mb-3">
+              <input
+                type="text"
+                placeholder="Add tag..."
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyPress={handleTagInputKeyPress}
+                className="flex-1 bg-[#13131A] border border-[#1E1E2E] rounded-lg px-3 py-2 text-[13px] text-zinc-200 placeholder-zinc-600 outline-none focus:border-indigo-500/50 transition-colors"
+              />
+              <select
+                value={selectedTagColor}
+                onChange={(e) =>
+                  setSelectedTagColor(e.target.value as TagColor)
+                }
+                className="bg-[#13131A] border border-[#1E1E2E] rounded-lg px-2 py-2 text-[13px] text-zinc-200 outline-none focus:border-indigo-500/50 transition-colors"
+              >
+                {TAG_COLORS.map((color) => (
+                  <option key={color} value={color}>
+                    {color.charAt(0).toUpperCase() + color.slice(1)}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={addTag}
+                className="px-3 py-2 rounded-lg bg-indigo-500/90 hover:bg-indigo-500 text-white text-[13px] font-medium transition-colors"
+              >
+                Add
+              </button>
+            </div>
+
+            {/* Display added tags */}
+            {values.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {values.tags.map((tag) => {
+                  const style = TAG_COLOR_STYLES[tag.color];
+                  return (
+                    <div
+                      key={tag.name}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium border ${style.bg} ${style.text} ${style.border}`}
+                    >
+                      {tag.name}
+                      <button
+                        onClick={() => removeTag(tag.name)}
+                        className="ml-0.5 hover:opacity-70 transition-opacity"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 

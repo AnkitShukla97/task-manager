@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import type { Task, Status } from "../../types";
-import { PRIORITY_STYLES, PRIORITY_LABEL, dueDateLabel } from "../../utils";
+import {
+  PRIORITY_STYLES,
+  PRIORITY_LABEL,
+  dueDateLabel,
+  TAG_COLOR_STYLES,
+} from "../../utils";
 import { useTaskContext } from "../../context/TaskContext";
 
 interface Props {
@@ -127,14 +132,17 @@ export default function TaskCard({ task, onEdit }: Props) {
           >
             {PRIORITY_LABEL[task.priority]}
           </span>
-          {task.tags.map((tag) => (
-            <span
-              key={tag}
-              className="text-[10px] px-[7px] py-[2px] rounded-[6px] bg-indigo-500/10 text-indigo-400"
-            >
-              {tag}
-            </span>
-          ))}
+          {task.tags.map((tag) => {
+            const style = TAG_COLOR_STYLES[tag.color];
+            return (
+              <span
+                key={tag.name}
+                className={`text-[10px] px-[7px] py-[2px] rounded-[6px] font-medium ${style.bg} ${style.text}`}
+              >
+                {tag.name}
+              </span>
+            );
+          })}
           {due.label && (
             <span className={`ml-auto text-[11px] ${due.color}`}>
               {due.label}

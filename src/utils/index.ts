@@ -1,4 +1,4 @@
-import type { Priority, Status } from '../types'
+import type { Priority, Status, TagColor } from '../types'
 
 export function formatDate(iso?: string): string {
   if (!iso) return ''
@@ -51,6 +51,21 @@ export const STATUS_META: Record<Status, { label: string; dot: string; border: s
     border: 'border-t-emerald-500',
     accent: 'text-emerald-400',
   },
+}
+
+export const TAG_COLORS: TagColor[] = ['red', 'orange', 'amber', 'green', 'emerald', 'cyan', 'blue', 'indigo', 'purple', 'pink']
+
+export const TAG_COLOR_STYLES: Record<TagColor, { bg: string; text: string; border: string }> = {
+  'red': { bg: 'bg-red-500/15', text: 'text-red-400', border: 'border-red-500/25' },
+  'orange': { bg: 'bg-orange-500/15', text: 'text-orange-400', border: 'border-orange-500/25' },
+  'amber': { bg: 'bg-amber-500/15', text: 'text-amber-400', border: 'border-amber-500/25' },
+  'green': { bg: 'bg-green-500/15', text: 'text-green-400', border: 'border-green-500/25' },
+  'emerald': { bg: 'bg-emerald-500/15', text: 'text-emerald-400', border: 'border-emerald-500/25' },
+  'cyan': { bg: 'bg-cyan-500/15', text: 'text-cyan-400', border: 'border-cyan-500/25' },
+  'blue': { bg: 'bg-blue-500/15', text: 'text-blue-400', border: 'border-blue-500/25' },
+  'indigo': { bg: 'bg-indigo-500/15', text: 'text-indigo-400', border: 'border-indigo-500/25' },
+  'purple': { bg: 'bg-purple-500/15', text: 'text-purple-400', border: 'border-purple-500/25' },
+  'pink': { bg: 'bg-pink-500/15', text: 'text-pink-400', border: 'border-pink-500/25' },
 }
 
 export function generateId(): string {

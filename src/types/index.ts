@@ -1,5 +1,11 @@
 export type Priority = 'high' | 'medium' | 'low'
 export type Status = 'todo' | 'in-progress' | 'done'
+export type TagColor = 'red' | 'orange' | 'amber' | 'green' | 'emerald' | 'cyan' | 'blue' | 'indigo' | 'purple' | 'pink'
+
+export interface Tag {
+  name: string
+  color: TagColor
+}
 
 export interface Task {
   id: string
@@ -7,7 +13,7 @@ export interface Task {
   description?: string
   status: Status
   priority: Priority
-  tags: string[]
+  tags: Tag[]
   dueDate?: string
   createdAt: string
   updatedAt: string
