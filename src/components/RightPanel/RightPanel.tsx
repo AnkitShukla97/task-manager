@@ -1,4 +1,3 @@
-import React from "react";
 import { useTaskContext } from "../../context/TaskContext";
 import { useDueSoon } from "../../hooks";
 import { dueDateLabel } from "../../utils";

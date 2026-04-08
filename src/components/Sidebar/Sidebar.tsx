@@ -160,7 +160,7 @@ export default function Sidebar() {
             >
               {p.name}
             </span>
-            <span
+            {/* <span
               className={`ml-auto text-[11px] rounded-full px-[7px] py-[1px]
               ${
                 p.active
@@ -169,7 +169,7 @@ export default function Sidebar() {
               }`}
             >
               {p.count}
-            </span>
+            </span> */}
           </button>
         ))}
       </div>
