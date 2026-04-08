@@ -6,9 +6,10 @@ interface Props {
   status: Status;
   tasks: Task[];
   onAddTask: () => void;
+  onEditTask: (task: Task) => void;
 }
 
-export default function KanbanColumn({ status, tasks, onAddTask }: Props) {
+export default function KanbanColumn({ status, tasks, onAddTask, onEditTask }: Props) {
   const meta = STATUS_META[status];
 
   return (
@@ -36,7 +37,7 @@ export default function KanbanColumn({ status, tasks, onAddTask }: Props) {
             </div>
           )}
           {tasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
+            <TaskCard key={task.id} task={task} onEdit={onEditTask} />
           ))}
         </div>
       </div>

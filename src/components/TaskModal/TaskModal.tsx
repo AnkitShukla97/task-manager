@@ -1,10 +1,11 @@
 import React from "react";
 import { useTaskContext } from "../../context/TaskContext";
-import type { Priority, Status } from "../../types";
+import type { Priority, Status, Task } from "../../types";
 import { generateId } from "../../utils";
 
 interface Props {
   onClose: () => void;
+  editingTask?: Task | null;
 }
 
 interface FormValues {
@@ -30,16 +31,16 @@ function validate(v: FormValues): Partial<Record<keyof FormValues, string>> {
   return errors;
 }
 
-export default function TaskModal({ onClose }: Props) {
+export default function TaskModal({ onClose, editingTask }: Props) {
   const { dispatch } = useTaskContext();
-  const [values, setValues] = React.useState<FormValues>({
-    title: "",
-    description: "",
-    priority: "medium",
-    status: "todo",
-    dueDate: "",
-    tags: "",
-  });
+  const [values, setValues] = React.useState<FormValues>(() => ({
+    title: editingTask?.title || "",
+    description: editingTask?.description || "",
+    priority: editingTask?.priority || "medium",
+    status: editingTask?.status || "todo",
+    dueDate: editingTask?.dueDate || "",
+    tags: editingTask?.tags.join(", ") || "",
+  }));
   const [errors, setErrors] = React.useState<
     Partial<Record<keyof FormValues, string>>
   >({});
@@ -56,23 +57,42 @@ export default function TaskModal({ onClose }: Props) {
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
-    dispatch({
-      type: "ADD_TASK",
-      payload: {
-        id: generateId(),
-        title: values.title.trim(),
-        description: values.description.trim() || undefined,
-        priority: values.priority,
-        status: values.status,
-        tags: values.tags
-          .split(",")
-          .map((t) => t.trim())
-          .filter(Boolean),
-        dueDate: values.dueDate || undefined,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-    });
+    if (editingTask) {
+      dispatch({
+        type: "UPDATE_TASK",
+        payload: {
+          ...editingTask,
+          title: values.title.trim(),
+          description: values.description.trim() || undefined,
+          priority: values.priority,
+          status: values.status,
+          tags: values.tags
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean),
+          dueDate: values.dueDate || undefined,
+          updatedAt: new Date().toISOString(),
+        },
+      });
+    } else {
+      dispatch({
+        type: "ADD_TASK",
+        payload: {
+          id: generateId(),
+          title: values.title.trim(),
+          description: values.description.trim() || undefined,
+          priority: values.priority,
+          status: values.status,
+          tags: values.tags
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean),
+          dueDate: values.dueDate || undefined,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+      });
+    }
     onClose();
   }
 
@@ -89,7 +109,7 @@ export default function TaskModal({ onClose }: Props) {
       <div className="bg-[#16161F] border border-[#1E1E2E] rounded-2xl w-full max-w-md p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-5">
           <h2 className="font-display text-[17px] font-bold text-zinc-100">
-            New Task
+            {editingTask ? "Edit Task" : "New Task"}
           </h2>
           <button
             onClick={onClose}
@@ -215,7 +235,7 @@ export default function TaskModal({ onClose }: Props) {
             onClick={handleSubmit}
             className="flex-1 py-2 rounded-lg bg-indigo-500/90 hover:bg-indigo-500 text-white text-[13px] font-medium transition-colors"
           >
-            Create Task
+            {editingTask ? "Update Task" : "Create Task"}
           </button>
         </div>
       </div>

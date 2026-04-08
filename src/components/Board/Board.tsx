@@ -2,13 +2,29 @@ import React, { useState } from "react";
 import { useTaskContext } from "../../context/TaskContext";
 import KanbanColumn from "./Kanbancolumn";
 import TaskModal from "../TaskModal/TaskModal";
-import type { Status } from "../../types";
+import type { Status, Task } from "../../types";
 
 const COLUMNS: Status[] = ["todo", "in-progress", "done"];
 
 export default function Board() {
   const { filteredTasks } = useTaskContext();
   const [modalOpen, setModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+
+  const handleAddTask = () => {
+    setEditingTask(null);
+    setModalOpen(true);
+  };
+
+  const handleEditTask = (task: Task) => {
+    setEditingTask(task);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setEditingTask(null);
+  };
 
   return (
     <>
@@ -18,12 +34,18 @@ export default function Board() {
             key={col}
             status={col}
             tasks={filteredTasks(col)}
-            onAddTask={() => setModalOpen(true)}
+            onAddTask={handleAddTask}
+            onEditTask={handleEditTask}
           />
         ))}
       </div>
 
-      {modalOpen && <TaskModal onClose={() => setModalOpen(false)} />}
+      {modalOpen && (
+        <TaskModal
+          onClose={handleCloseModal}
+          editingTask={editingTask}
+        />
+      )}
     </>
   );
 }

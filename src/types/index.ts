@@ -26,6 +26,7 @@ export type TaskAction =
   | { type: 'DELETE_TASK'; payload: string }
   | { type: 'MOVE_TASK'; payload: { id: string; status: Status } }
   | { type: 'REORDER_TASKS'; payload: Task[] }
+  | { type: 'SET_EDITING_TASK'; payload: Task | null }
 
 export interface FilterState {
   priority: Priority | 'all'

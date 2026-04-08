@@ -29,63 +29,63 @@ const NAV_ITEMS = [
       </svg>
     ),
   },
-  {
-    label: "Timeline",
-    active: false,
-    icon: (
-      <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
-        <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.3" />
-        <path
-          d="M8 5v3.5l2 1.5"
-          stroke="currentColor"
-          strokeWidth="1.3"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
-  },
-  {
-    label: "List",
-    active: false,
-    icon: (
-      <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
-        <path
-          d="M2 4h12M2 8h8M2 12h10"
-          stroke="currentColor"
-          strokeWidth="1.3"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
-  },
-  {
-    label: "Reports",
-    active: false,
-    icon: (
-      <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
-        <rect
-          x="2"
-          y="2"
-          width="12"
-          height="12"
-          rx="2"
-          stroke="currentColor"
-          strokeWidth="1.3"
-        />
-        <path
-          d="M5 8h6M8 5v6"
-          stroke="currentColor"
-          strokeWidth="1.3"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
-  },
+  // {
+  //   label: "Timeline",
+  //   active: false,
+  //   icon: (
+  //     <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+  //       <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.3" />
+  //       <path
+  //         d="M8 5v3.5l2 1.5"
+  //         stroke="currentColor"
+  //         strokeWidth="1.3"
+  //         strokeLinecap="round"
+  //       />
+  //     </svg>
+  //   ),
+  // },
+  // {
+  //   label: "List",
+  //   active: false,
+  //   icon: (
+  //     <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+  //       <path
+  //         d="M2 4h12M2 8h8M2 12h10"
+  //         stroke="currentColor"
+  //         strokeWidth="1.3"
+  //         strokeLinecap="round"
+  //       />
+  //     </svg>
+  //   ),
+  // },
+  // {
+  //   label: "Reports",
+  //   active: false,
+  //   icon: (
+  //     <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+  //       <rect
+  //         x="2"
+  //         y="2"
+  //         width="12"
+  //         height="12"
+  //         rx="2"
+  //         stroke="currentColor"
+  //         strokeWidth="1.3"
+  //       />
+  //       <path
+  //         d="M5 8h6M8 5v6"
+  //         stroke="currentColor"
+  //         strokeWidth="1.3"
+  //         strokeLinecap="round"
+  //       />
+  //     </svg>
+  //   ),
+  // },
 ];
 
 const PROJECTS = [
-  { name: "Portfolio Site", color: "bg-indigo-500", count: 8 },
-  { name: "API Integration", color: "bg-amber-500", count: 5 },
+  // { name: "Portfolio Site", color: "bg-indigo-500", count: 8 },
+  // { name: "API Integration", color: "bg-amber-500", count: 5 },
   { name: "TaskFlow App", color: "bg-emerald-500", count: 12, active: true },
 ];
 
@@ -177,11 +177,11 @@ export default function Sidebar() {
       {/* User */}
       <div className="border-t border-[#1E1E2E] pt-4 flex items-center gap-2.5">
         <div className="w-[34px] h-[34px] rounded-full bg-gradient-to-br from-indigo-500 to-amber-400 flex items-center justify-center text-[13px] font-semibold text-white flex-shrink-0">
-          RK
+          AS
         </div>
         <div className="min-w-0">
           <p className="text-[13px] font-medium text-zinc-100 truncate">
-            Rahul K.
+            Ankit S.
           </p>
           <p className="text-[11px] text-zinc-500">Developer</p>
         </div>

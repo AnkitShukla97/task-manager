@@ -5,9 +5,10 @@ import { useTaskContext } from "../../context/TaskContext";
 
 interface Props {
   task: Task;
+  onEdit: (task: Task) => void;
 }
 
-export default function TaskCard({ task }: Props) {
+export default function TaskCard({ task, onEdit }: Props) {
   const { dispatch } = useTaskContext();
   const [hovered, setHovered] = useState(false);
   const due = dueDateLabel(task.dueDate);
@@ -30,8 +31,13 @@ export default function TaskCard({ task }: Props) {
     dispatch({ type: "DELETE_TASK", payload: task.id });
   }
 
+  function openTaskCard() {
+    onEdit(task);
+  }
+
   return (
     <div
+      onClick={openTaskCard}
       className={`group relative rounded-[10px] p-3 border cursor-pointer transition-all
         ${
           isDone
